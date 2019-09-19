@@ -13,7 +13,6 @@ public class JoinChatViewModel extends ViewModel {
         messangerService.addtomethod(new ImessangerTest() {
             @Override
             public void ResponseMessage(TcpMessage message) {
-
             }
         });
     }
