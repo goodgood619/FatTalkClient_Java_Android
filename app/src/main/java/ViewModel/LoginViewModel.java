@@ -122,4 +122,6 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
       messengerClient.requestLogin(id,password);
     }
 
+
+
 }
