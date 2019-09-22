@@ -18,6 +18,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fattalkclient.FindUserInfoActivity;
+import com.example.fattalkclient.JoinMemberActivity;
 import com.example.fattalkclient.MainActivity;
 import com.example.fattalkclient.MainMenuView;
 
@@ -118,10 +120,43 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
         }
     }
 
-    public void onClick() {
+    public void LoginClick() {
       messengerClient.requestLogin(id,password);
     }
+    public void JoinMemberClick(){
+        JoinViewAsyncTask joinViewAsyncTask = new JoinViewAsyncTask();
+        joinViewAsyncTask.execute();
+    }
+    public class JoinViewAsyncTask extends AsyncTask<Void,Void,Integer>{
 
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return 0;
+        }
 
+        @Override
+        protected void onPostExecute(Integer result){
+            Intent intent = new Intent(context, JoinMemberActivity.class);
+            context.startActivity(intent);
+        }
 
+    }
+
+    public void FindMemberClick(){
+        FindUserViewAsyncTask findUserViewAsyncTask = new FindUserViewAsyncTask();
+        findUserViewAsyncTask.execute();
+    }
+    public class FindUserViewAsyncTask extends AsyncTask<Void,Void,Integer>{
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return 0;
+        }
+        @Override
+        protected void onPostExecute(Integer result){
+            Intent intent = new Intent(context, FindUserInfoActivity.class);
+            context.startActivity(intent);
+        }
+
+    }
 }
