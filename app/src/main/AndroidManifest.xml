@@ -14,13 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FindUserInfoActivity"></activity>
+        <activity android:name=".ModifyUserinfoActivity"></activity>
+        <activity android:name=".NotBlockFriendActivity" />
+        <activity android:name=".BlockFriendActivity" />
+        <activity android:name=".DeleteFriendActivity" />
+        <activity android:name=".PlusFriendActivity" />
+        <activity android:name=".ChatRoomsActivity" />
+        <activity android:name=".FindUserInfoActivity" />
         <activity android:name=".JoinMemberActivity" />
         <activity android:name=".FriendListActivity" />
-        <activity android:name=".MainMenuView" />
-        <activity
-            android:name=".ui.login.LoginView"
-            android:label="@string/title_activity_login_view" />
+        <activity android:name=".MainMenuViewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

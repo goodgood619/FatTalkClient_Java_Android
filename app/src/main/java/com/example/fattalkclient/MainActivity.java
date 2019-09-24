@@ -32,11 +32,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //Gson gson = new Gson();
-        //String messengerClient1 = getIntent().getStringExtra("MessengerClient");
-        //gson.fromJson(messengerClient1,MessengerClient.class);
-        //String messengerService1 = getIntent().getStringExtra("MessengerService");
-       // gson.fromJson(messengerService1,MessangerService.class);
         LoginViewModel loginViewModel = new LoginViewModel(messangerService,messengerClient,this);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         binding.setLoginviewmodel(loginViewModel);
@@ -66,7 +61,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goMainMenuView(){
-
-    }
 }

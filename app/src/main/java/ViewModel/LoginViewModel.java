@@ -1,36 +1,28 @@
 package ViewModel;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.View;
-import android.widget.HeaderViewListAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
+import com.example.fattalkclient.ConnectsocketView;
 import com.example.fattalkclient.FindUserInfoActivity;
 import com.example.fattalkclient.JoinMemberActivity;
 import com.example.fattalkclient.MainActivity;
-import com.example.fattalkclient.MainMenuView;
+import com.example.fattalkclient.MainMenuViewActivity;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import Model.TcpMessage;
 import Module.JsonHelper;
 import Module.MessengerClient;
+import Module.MessengerClientAdapter;
 import Module.TcpClient;
 import Service.ImessangerTest;
 import Service.MessangerService;
@@ -52,9 +44,11 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
         notifyPropertyChanged(BR.password);
     }
     private MessengerClient messengerClient = null;
+    private MessangerService messangerService = null;
     public LoginViewModel(MessangerService messangerService,MessengerClient messengerClient,Context context){
         this.context = context;
         this.messengerClient = messengerClient;
+        this.messangerService = messangerService;
         messangerService.addtomethod(new ImessangerTest() {
             @Override
             public void ResponseMessage(TcpMessage message) {
@@ -94,7 +88,11 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
                     break;
                 case 2:
                     Toast.makeText(context,"뚱톡에 오신걸 환영합니다",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(context,MainMenuView.class);
+                    Gson gson;
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(TcpClient.class,new MessengerClientAdapter());
+                    gson = gsonBuilder.create();
+                    Intent intent = new Intent(context, MainMenuViewActivity.class);
                     JsonHelper jsonHelper = new JsonHelper();
                     HashMap<String,String> hashMap = new HashMap<>();
                     try {
@@ -104,6 +102,8 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
                     }
                     String nickname = hashMap.get("Nickname");
                     intent.putExtra("Nickname",nickname);
+                    intent.putExtra("MessengerService", gson.toJson(messangerService));
+                    intent.putExtra("MessengerClient", gson.toJson(messengerClient,TcpClient.class));
                     context.startActivity(intent);
                     break;
                 case 3:
