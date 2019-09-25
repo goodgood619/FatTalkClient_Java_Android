@@ -10,7 +10,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
-public class TcpMessage {
+public class TcpMessage implements Serializable{
     public Command command;
     public int tempcommand;
     public int check;

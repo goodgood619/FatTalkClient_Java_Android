@@ -11,14 +11,15 @@ import android.util.Log;
 import com.example.fattalkclient.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 import Module.MessengerClient;
 import Service.MessangerService;
 import ViewModel.LoginViewModel;
 
-public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+public class MainActivity extends AppCompatActivity implements Serializable {
+    private static ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LoginViewModel loginViewModel = new LoginViewModel(messangerService,messengerClient,this);
+        LoginViewModel loginViewModel = new LoginViewModel(messengerClient.messangerService,messengerClient,this);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         binding.setLoginviewmodel(loginViewModel);
     }

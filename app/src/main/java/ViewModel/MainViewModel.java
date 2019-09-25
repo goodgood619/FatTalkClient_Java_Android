@@ -18,9 +18,15 @@ import com.example.fattalkclient.FriendListActivity;
 import com.example.fattalkclient.ModifyUserinfoActivity;
 import com.example.fattalkclient.NotBlockFriendActivity;
 import com.example.fattalkclient.PlusFriendActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import Model.TcpMessage;
 import Module.MessengerClient;
+import Service.Imessanger;
 import Service.ImessangerTest;
 import Service.MessangerService;
 
@@ -28,12 +34,23 @@ public class MainViewModel extends BaseObservable {
     private Context context;
     private MessengerClient messengerClient;
     private MessangerService messangerService;
-    private String usernickname="";
+    private String usernickname = "";
     public MainViewModel(Context context, MessengerClient messengerClient,MessangerService messangerService,String usernickname) {
         this.context = context;
         this.messangerService = messangerService;
         this.messengerClient = messengerClient;
         this.usernickname = usernickname;
+
+        messangerService.addtomethod(new ImessangerTest() {
+            @Override
+            public void ResponseMessage(TcpMessage message) {
+                switch (message.command){
+                    case logout:
+
+                        break;
+                }
+            }
+        });
     }
 
     public void FriendlistBinding(){
@@ -186,10 +203,11 @@ public class MainViewModel extends BaseObservable {
             builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    dialog.cancel(); //취소
                 }
             });
-
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
     }
 }

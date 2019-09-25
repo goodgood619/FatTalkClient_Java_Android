@@ -2,9 +2,11 @@ package Module;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.*;
-public class JsonHelper {
+public class JsonHelper implements Serializable {
     private JsonParser jsonParser;
     private Jsonname jsonname;
     public JsonHelper(){
@@ -141,7 +143,7 @@ public class JsonHelper {
     }
 
 
-    public class Jsonname {
+    public class Jsonname implements Serializable{
         public final String ID = "ID";
         public final String FID = "Fid";
         public final String Password = "Password";

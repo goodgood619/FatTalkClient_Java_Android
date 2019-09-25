@@ -2,6 +2,7 @@ package ViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,20 +17,26 @@ import com.example.fattalkclient.MainActivity;
 import com.example.fattalkclient.MainMenuViewActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Model.TcpMessage;
 import Module.JsonHelper;
 import Module.MessengerClient;
 import Module.MessengerClientAdapter;
 import Module.TcpClient;
+import Service.Imessanger;
 import Service.ImessangerTest;
 import Service.MessangerService;
 
-public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindable을 쓰기위한 필수조건
-    private String id="";
-    private String password = "";
+public class LoginViewModel extends BaseObservable implements Serializable { //BaseObservable이 @Bindable을 쓰기위한 필수조건
+    private transient String id="";
+    private transient String password = "";
     Context context;
     @Bindable
     public String getId(){return id;}
@@ -52,7 +59,6 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
         messangerService.addtomethod(new ImessangerTest() {
             @Override
             public void ResponseMessage(TcpMessage message) {
-                Log.d("LoginViewModel", "LoginViewModel로 전송됨");
                 switch (message.command){
                     case login:
                         Validate(message,message.check,message.usernumber,message.message);
@@ -60,6 +66,7 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
                 }
             }
         });
+
     }
     public void Validate(TcpMessage message,int check,int usernumber,String nickname){
         LoginViewAsyncTask loginViewAsyncTask = new LoginViewAsyncTask();
@@ -88,22 +95,22 @@ public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindabl
                     break;
                 case 2:
                     Toast.makeText(context,"뚱톡에 오신걸 환영합니다",Toast.LENGTH_LONG).show();
-                    Gson gson;
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(TcpClient.class,new MessengerClientAdapter());
-                    gson = gsonBuilder.create();
                     Intent intent = new Intent(context, MainMenuViewActivity.class);
                     JsonHelper jsonHelper = new JsonHelper();
                     HashMap<String,String> hashMap = new HashMap<>();
+                    HashMap<String,MessengerClient> testhashmap = new HashMap<>();
                     try {
                         hashMap = jsonHelper.getnickinfo(message.message);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    //testhashmap.put("MessengerClient",messengerClient);
                     String nickname = hashMap.get("Nickname");
+                    testhashmap.put("MessengerClient",messengerClient);
                     intent.putExtra("Nickname",nickname);
-                    intent.putExtra("MessengerService", gson.toJson(messangerService));
-                    intent.putExtra("MessengerClient", gson.toJson(messengerClient,TcpClient.class));
+                    intent.putExtra("MessengerClient",testhashmap);
+                    //intent.putExtra("MessengerService", gson.toJson(messangerService,MessangerService.class));
+                    //intent.putExtra("MessengerClient",testhashmap);
                     context.startActivity(intent);
                     break;
                 case 3:
