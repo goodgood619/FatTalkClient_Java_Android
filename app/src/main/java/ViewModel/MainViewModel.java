@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
 
 import androidx.databinding.BaseObservable;
-import androidx.lifecycle.ViewModel;
 
 import com.example.fattalkclient.BlockFriendActivity;
 import com.example.fattalkclient.ChatRoomsActivity;
@@ -18,15 +15,9 @@ import com.example.fattalkclient.FriendListActivity;
 import com.example.fattalkclient.ModifyUserinfoActivity;
 import com.example.fattalkclient.NotBlockFriendActivity;
 import com.example.fattalkclient.PlusFriendActivity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import Model.TcpMessage;
 import Module.MessengerClient;
-import Service.Imessanger;
 import Service.ImessangerTest;
 import Service.MessangerService;
 
@@ -40,17 +31,19 @@ public class MainViewModel extends BaseObservable {
         this.messangerService = messangerService;
         this.messengerClient = messengerClient;
         this.usernickname = usernickname;
+        if(messengerClient.checkdelegate.contains("MainViewModel") == false) {
+            messengerClient.checkdelegate.add("MainViewModel");
+            messangerService.addtomethod(new ImessangerTest() {
+                @Override
+                public void ResponseMessage(TcpMessage message) {
+                    switch (message.command) {
+                        case logout:
 
-        messangerService.addtomethod(new ImessangerTest() {
-            @Override
-            public void ResponseMessage(TcpMessage message) {
-                switch (message.command){
-                    case logout:
-
-                        break;
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void FriendlistBinding(){

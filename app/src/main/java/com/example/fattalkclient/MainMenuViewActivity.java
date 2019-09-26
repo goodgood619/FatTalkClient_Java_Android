@@ -20,13 +20,12 @@ public class MainMenuViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         MessengerClient messengerClient = null;
         super.onCreate(savedInstanceState);
-        //String messengerClient1 = getIntent().getStringExtra("MessengerClient");
-        //messengerClient = gson.fromJson(messengerClient1, MessengerClient.class);
-        //HashMap<String,MessengerClient> testmap = (HashMap<String, MessengerClient>) getIntent().getSerializableExtra("MessengerClient");
-        //String messengerService1 = getIntent().getStringExtra("MessengerService");
-        //messangerService = gson.fromJson(messengerService1, MessangerService.class);
-        HashMap<String,MessengerClient> testmap = (HashMap<String, MessengerClient>) getIntent().getSerializableExtra("MessengerClient");
-        messengerClient = testmap.get("MessengerClient");
+       // HashMap<String,MessengerClient> testmap = (HashMap<String, MessengerClient>) getIntent().getSerializableExtra("MessengerClient");
+        try {
+            messengerClient = MessengerClient.getMessengerClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String usernickname = getIntent().getStringExtra("Nickname");
         MainViewModel mainViewModel = new MainViewModel(this,messengerClient,messengerClient.messangerService,usernickname);
         activityMainMenuViewBinding = DataBindingUtil.setContentView(this,R.layout.activity_main_menu_view);

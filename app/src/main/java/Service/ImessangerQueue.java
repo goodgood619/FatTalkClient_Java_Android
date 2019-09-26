@@ -9,7 +9,7 @@ import java.util.List;
 
 import Model.TcpMessage;
 
-public class ImessangerQueue implements Serializable {
+public class ImessangerQueue  {
     private List<ImessangerTest> testList;
     public ImessangerQueue(){
         testList = new ArrayList<>();

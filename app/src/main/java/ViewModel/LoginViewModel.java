@@ -2,42 +2,28 @@ package ViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
-import com.example.fattalkclient.ConnectsocketView;
 import com.example.fattalkclient.FindUserInfoActivity;
 import com.example.fattalkclient.JoinMemberActivity;
-import com.example.fattalkclient.MainActivity;
 import com.example.fattalkclient.MainMenuViewActivity;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import Model.TcpMessage;
 import Module.JsonHelper;
 import Module.MessengerClient;
-import Module.MessengerClientAdapter;
-import Module.TcpClient;
-import Service.Imessanger;
 import Service.ImessangerTest;
 import Service.MessangerService;
 
-public class LoginViewModel extends BaseObservable implements Serializable { //BaseObservable이 @Bindable을 쓰기위한 필수조건
-    private transient String id="";
-    private transient String password = "";
-    Context context;
+public class LoginViewModel extends BaseObservable{ //BaseObservable이 @Bindable을 쓰기위한 필수조건
+    private String id="";
+    private String password = "";
+    private Context context;
     @Bindable
     public String getId(){return id;}
     public void setId(String id){
@@ -56,17 +42,19 @@ public class LoginViewModel extends BaseObservable implements Serializable { //B
         this.context = context;
         this.messengerClient = messengerClient;
         this.messangerService = messangerService;
-        messangerService.addtomethod(new ImessangerTest() {
-            @Override
-            public void ResponseMessage(TcpMessage message) {
-                switch (message.command){
-                    case login:
-                        Validate(message,message.check,message.usernumber,message.message);
-                        break;
+        if(messengerClient.checkdelegate.contains("LoginViewModel")== false) {
+            messengerClient.checkdelegate.add("LoginViewModel");
+            messangerService.addtomethod(new ImessangerTest() {
+                @Override
+                public void ResponseMessage(TcpMessage message) {
+                    switch (message.command) {
+                        case login:
+                            Validate(message, message.check, message.usernumber, message.message);
+                            break;
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
     public void Validate(TcpMessage message,int check,int usernumber,String nickname){
         LoginViewAsyncTask loginViewAsyncTask = new LoginViewAsyncTask();
@@ -97,20 +85,16 @@ public class LoginViewModel extends BaseObservable implements Serializable { //B
                     Toast.makeText(context,"뚱톡에 오신걸 환영합니다",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(context, MainMenuViewActivity.class);
                     JsonHelper jsonHelper = new JsonHelper();
-                    HashMap<String,String> hashMap = new HashMap<>();
-                    HashMap<String,MessengerClient> testhashmap = new HashMap<>();
+                    HashMap<String,String> hashMap = null;
                     try {
                         hashMap = jsonHelper.getnickinfo(message.message);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    //testhashmap.put("MessengerClient",messengerClient);
                     String nickname = hashMap.get("Nickname");
-                    testhashmap.put("MessengerClient",messengerClient);
                     intent.putExtra("Nickname",nickname);
-                    intent.putExtra("MessengerClient",testhashmap);
-                    //intent.putExtra("MessengerService", gson.toJson(messangerService,MessangerService.class));
-                    //intent.putExtra("MessengerClient",testhashmap);
+                    setId("");
+                    setPassword("");
                     context.startActivity(intent);
                     break;
                 case 3:

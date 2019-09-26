@@ -10,9 +10,9 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Executors;
 
 import Model.TcpMessage;
-public abstract class TcpClient implements Serializable{
-    private static AsynchronousSocketChannel asynchronousSocketChannel;
-    private static AsynchronousChannelGroup channelGroup;
+public abstract class TcpClient{
+    private AsynchronousSocketChannel asynchronousSocketChannel;
+    private AsynchronousChannelGroup channelGroup;
     public TcpClient() throws Exception{
         // CPU 코어 수만큼 스레드를 관리하는 스레드풀 생성하고 이것을 이용하느
 
@@ -56,6 +56,7 @@ public abstract class TcpClient implements Serializable{
                 @Override
                 public void completed(Integer result, Object attachment) {
                     Log.d("TcpClient","Write 성공");
+                    Log.d("TcpClient","메시지 보내기 성공");
                 }
 
                 @Override
@@ -63,7 +64,6 @@ public abstract class TcpClient implements Serializable{
                         Log.e("TcpClient","Write 실패 "+exc.toString());
                 }
             });
-            Log.d("TcpClient","메시지 보내기 성공");
             Log.e("TcpClient","아직 asynchronousSocketChannel이 열려있는가? "+asynchronousSocketChannel.isOpen());
         }
         catch (Exception e) {

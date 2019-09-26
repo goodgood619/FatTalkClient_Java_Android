@@ -12,7 +12,7 @@ import java.util.function.Function;
 import Model.TcpMessage;
 import Module.MessengerClient;
 @SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
-public class MessangerService implements Serializable {
+public class MessangerService {
     private ImessangerQueue imessangerQueue;
     //private LinkedHashMap linkedHashMap;
     public MessangerService(){

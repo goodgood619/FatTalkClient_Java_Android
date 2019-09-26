@@ -1,30 +1,34 @@
 package Module;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.logging.Handler;
-
-import javax.security.auth.callback.Callback;
 
 import Model.TcpMessage;
 import Model.TcpMessage.Command;
-import Service.Imessanger;
-import Service.ImessangerQueue;
-import Service.ImessangerTest;
 import Service.MessangerService;
 
 import java.util.*;
 @SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
-public class MessengerClient extends TcpClient implements Serializable {
+public class MessengerClient extends TcpClient{
+    private static MessengerClient messengerClient  = null;
+
+    static {
+        try {
+            messengerClient = new MessengerClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public MessangerService messangerService;
     private JsonHelper jsonHelper = null;
-    public MessengerClient(MessangerService messangerService) throws Exception {
+    public Set<String> checkdelegate = null;
+    private MessengerClient() throws Exception {
         super();
-       this.messangerService = messangerService;
+        messangerService = new MessangerService();
        jsonHelper = new JsonHelper();
+       checkdelegate = new HashSet<>();
         // TODO Auto-generated constructor stub
+    }
+    public static MessengerClient getMessengerClient(){
+        return messengerClient;
     }
     public boolean requestLogin(String id,String password){
         TcpMessage message = new TcpMessage();
@@ -41,5 +45,6 @@ public class MessengerClient extends TcpClient implements Serializable {
     public void Response(TcpMessage message) throws Exception {
         messangerService.Responsetomethod(message);
     }
+
 
 }

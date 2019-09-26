@@ -6,7 +6,7 @@ import org.json.simple.JSONArray;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.*;
-public class JsonHelper implements Serializable {
+public class JsonHelper {
     private JsonParser jsonParser;
     private Jsonname jsonname;
     public JsonHelper(){

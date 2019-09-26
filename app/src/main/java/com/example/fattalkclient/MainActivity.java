@@ -18,48 +18,39 @@ import Module.MessengerClient;
 import Service.MessangerService;
 import ViewModel.LoginViewModel;
 
-public class MainActivity extends AppCompatActivity implements Serializable {
+public class MainActivity extends AppCompatActivity {
     private static ActivityMainBinding binding;
+    private MessengerClient messengerClient;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        MessengerClient messengerClient = null;
-        MessangerService messangerService = new MessangerService();
-        LoginAsyncTask loginAsyncTask = new LoginAsyncTask(messangerService);
+        LoginAsyncTask loginAsyncTask = new LoginAsyncTask();
         try {
             messengerClient = loginAsyncTask.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         LoginViewModel loginViewModel = new LoginViewModel(messengerClient.messangerService,messengerClient,this);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         binding.setLoginviewmodel(loginViewModel);
     }
-    public class LoginAsyncTask extends AsyncTask<Void, Integer, MessengerClient> {
-        private MessangerService messangerService;
-        private MessengerClient messengerClient;
-        public LoginAsyncTask(MessangerService messangerService){
-            this.messangerService = messangerService;
-        }
+
+    public class LoginAsyncTask extends AsyncTask<Void,Void,MessengerClient>{
         @Override
         protected MessengerClient doInBackground(Void... voids) {
             try {
-                messengerClient = new MessengerClient(messangerService);
+                messengerClient = MessengerClient.getMessengerClient();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return messengerClient;
         }
-
-        @Override // 확실한 성공
+        @Override
         protected void onPostExecute(MessengerClient messengerClient){
             super.onPostExecute(messengerClient);
         }
-        @Override //중간에 실패했을때
-        protected void onCancelled(){
-        }
     }
+
 
 }

@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 import Model.TcpMessage;
 
-public interface ImessangerTest extends Serializable {
+public interface ImessangerTest{
     void ResponseMessage(TcpMessage message);
 }
